@@ -1,0 +1,106 @@
+\documentclass[twocolumn,letterpaper]{IEEEAerospaceCLS}
+
+% Math and symbol packages
+\usepackage{amsmath,amssymb,amsfonts,mathtools,physics,bm,bbm,dsfont,siunitx}
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+
+% Tables and columns
+\usepackage{booktabs}    % Professional-quality tables
+\usepackage{multirow}    % Table cells spanning multiple rows
+\usepackage{multicol}    % Multiple columns in tables or text
+\usepackage{tabularx}    % Tables with adjustable-width columns
+\usepackage{dcolumn}     % Decimal-aligned columns
+
+% Figures and floats
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{dblfloatfix}
+
+% Lists and formatting
+\usepackage{xcolor}
+\usepackage{textcomp}
+
+% Algorithms
+\usepackage{algorithmic}
+
+% Hyperlinks and clever referencing
+\usepackage[colorlinks=true, urlcolor=blue, linkcolor=black, citecolor=black]{hyperref}
+\usepackage{cleveref}
+
+% Citations and URLs
+\usepackage{cite}
+\usepackage{url}
+\usepackage{IEEEtrantools}
+
+\newcommand{\ignore}[1]{}
+\pdfminorversion=7
+
+\graphicspath{{figures/},{/home/guillemc/dev/LuPNT-private/output/2026_IEEE_Aeroconf_3DGS/}}
+
+\makeatletter
+% Redefine the itemize environment to add vertical spacing
+\def\itemize{
+    \tmpitemindent\itemindent
+    \ifnum \@itemdepth > 3 \@toodeep\else
+        \advance\@itemdepth\@ne
+        \edef\@itemitem{labelitem\romannumeral\the\@itemdepth}
+        % The \list command is where we add the spacing parameter
+        \list{\csname\@itemitem\endcsname}{
+            \itemindent\tmpitemindent
+            \itemsep=0pt  %<-- Adjust this value for vertical spacing
+            \parsep=5pt   %<-- Space between paragraphs within an item
+            \def\makelabel##1{\hspace\labelsep\hfil{##1}}
+        }
+    \fi
+}
+\makeatother
+
+\renewcommand{\arraystretch}{1.3} % Adjust table row height
+
+% Setup Cleveref Fig. and Eq. references
+\crefname{figure}{Fig.}{Figs.}
+\Crefname{figure}{Figure}{Figures}
+\crefname{equation}{Eq.}{Eqs.}
+\Crefname{equation}{Equation}{Equations}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Table}{Tables}
+\crefname{section}{Section}{Sections}
+\Crefname{section}{Section}{Sections}
+
+\begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
+
+\title{Semantic Segmentation and Depth Estimation for Real-Time Lunar Surface Mapping Using 3D Gaussian Splatting}
+
+\author{%
+	Guillem Casadesus Vila, Adam Dai, and Grace Gao\\
+	Department of Aeronautics and Astronautics\\
+	Stanford University\\
+	Stanford, CA, United States\\
+	\{guillemc,adai,gracegao\}@stanford.edu
+	\thanks{\footnotesize 979-8-3315-7360-7/26/$\$31.00$ \copyright2026 IEEE}
+}
+
+\maketitle
+
+\thispagestyle{plain}
+\pagestyle{plain}
+
+\input{sections/0-abstract.tex}
+\tableofcontents
+\input{sections/1-introduction.tex}
+\input{sections/2-problem.tex}
+\input{sections/3-method.tex}
+\input{sections/4-results.tex}
+\input{sections/5-conclusion.tex}
+\input{sections/6-acknowledgements.tex}
+
+\small
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+
+\input{sections/bio.tex}
+
+\end{document}

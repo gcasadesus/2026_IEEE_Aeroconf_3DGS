@@ -1,0 +1,20 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.10) (preloaded format=pdftex 2024.9.3)  2 MAY 2025 21:59
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**"//agohome03/U08/ED27913/My Documents/All/05 - IEEE Aerospace Conference/2026
+ Documents/Latex_Example_2025/IEEEAerospaceCLS.cls"
+
+(//agohome03/U08/ED27913/My Documents/All/05 - IEEE Aerospace Conference/2026 D
+ocuments/Latex_Example_2025/IEEEAerospaceCLS.cls
+! Undefined control sequence.
+l.27 \ProvidesClass
+                   {IEEEAerospaceCLS}[2012/12/10 IEEE Aerospace Conference 2...
+
+? 
+! Emergency stop.
+l.27 
+     
+End of file on the terminal!
+
+!  ==> Fatal error occurred, no output PDF file produced!

@@ -1,0 +1,67 @@
+
+\subsection{Evaluation Metrics}
+We evaluate the performance of our pipeline across three key tasks. The notation used here is consistent with that of our defined loss functions.
+
+\subsubsection{Depth Estimation}
+All depth estimation metrics are computed only over the valid pixels defined by the surface mask, $M_{\text{full}}$. For a rendered depth map $\hat{D}$ and a ground truth depth map $D$:
+\begin{itemize}
+	\item \textbf{Mean Absolute Error (MAE) [m] $\downarrow$}: The average L1 distance between the rendered and ground truth depth.
+	      \begin{equation}
+		      \text{MAE} = \frac{1}{|M_{\text{full}}|} \sum_{p \in M_{\text{full}}} |\hat{D}(p) - D(p)|
+	      \end{equation}
+
+	\item \textbf{Absolute Relative Error (AbsRel) $\downarrow$}: The scale-invariant average of the absolute relative difference.
+	      \begin{equation}
+		      \text{AbsRel} = \frac{1}{|M_{\text{full}}|} \sum_{p \in M_{\text{full}}} \frac{|\hat{D}(p) - D(p)|}{D(p)}
+	      \end{equation}
+
+	\item \textbf{Threshold Accuracy ($\delta_{25\%}$) $\uparrow$}: The percentage of pixels where the ratio between the rendered and ground truth depth is within a factor of 25\%.
+	      \begin{equation}
+		      \delta_{25\%} = \frac{1}{|M_{\text{full}}|} \sum_{p \in M_{\text{full}}} \mathbbm{1}\left\{\max\left(\frac{\hat{D}(p)}{D(p)}, \frac{D(p)}{\hat{D}(p)}\right) < 1.25\right\}
+	      \end{equation}
+
+	\item \textbf{Frames Per Second (FPS) $\uparrow$}: The processing throughput of the depth estimation model.
+\end{itemize}
+
+\subsubsection{Semantic Segmentation}
+We compute the following metrics over all the pixels in the image for the semantic segmentation models:
+\begin{itemize}
+	\item \textbf{Intersection over Union (mIoU) $\uparrow$}: The overlap between the predicted and ground truth masks for a single class or label.
+	      \begin{equation}
+		      \text{IoU} = \frac{\text{TP}}{\text{TP} + \text{FP} + \text{FN}}
+	      \end{equation}
+
+	\item \textbf{Accuracy (Acc.) $\uparrow$}: The percentage of all pixels in the image that are correctly classified.
+	      \begin{equation}
+		      \text{Acc.} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+	      \end{equation}
+\end{itemize}
+
+\subsubsection{Surface Reconstruction}
+To evaluate the final 3D map, we extract a point cloud, $\hat{P}$, by taking the means of the Gaussians in the dense representation and compare it to the ground truth point cloud, $P$. While a more accurate surface reconstruction could be achieved by leveraging the full density field of the Gaussians, this is beyond the scope of our current work. However, since our map is sufficiently dense, using the means of the Gaussians provides a good approximation for evaluation.
+\begin{itemize}
+	\item \textbf{Accuracy (Chamfer-$L_2$) [cm] $\downarrow$}: The average distance from each point in the reconstructed point cloud to its nearest neighbor in the ground truth point cloud. This measures the correctness of the reconstructed surface.
+	      \begin{equation}
+		      \text{Accuracy} = \frac{1}{|\hat{P}|} \sum_{\hat{p} \in \hat{P}} \min_{p \in P} \|\hat{p} - p\|_2
+	      \end{equation}
+
+	\item \textbf{Completeness (Chamfer-$L_2$) [cm] $\downarrow$}: The average distance from each point in the ground truth to its nearest neighbor in the reconstruction. This measures how well the reconstruction covers the ground truth surface.
+	      \begin{equation}
+		      \text{Completeness} = \frac{1}{|P|} \sum_{p \in P} \min_{p \in \hat{P}} \|p - \hat{p}\|_2
+	      \end{equation}
+
+	\item \textbf{Precision ($d$) [\%] $\uparrow$}: The percentage of reconstructed points within a distance threshold $d$ of the ground truth, measuring correctness.
+	      \begin{equation}
+		      \text{Precision}(d) = \frac{1}{|\hat{P}|} \sum_{p \in \hat{P}} \mathbbm{1}\left\{\min_{p \in P} \|p - \hat{p}\|_2 < d\right\}
+	      \end{equation}
+
+	\item \textbf{Recall ($d$) [\%] $\uparrow$}: The percentage of ground truth points that have a reconstructed point within a distance threshold $d$, measuring completeness.
+	      \begin{equation}
+		      \text{Recall}(d) = \frac{1}{|P|} \sum_{p \in P} \mathbbm{1}\left\{\min_{p \in \hat{P}} \|p - \hat{p}\|_2 < d\right\}
+	      \end{equation}
+
+	\item \textbf{F1-Score ($d$) [\%] $\uparrow$}: The harmonic mean of Precision and Recall, providing a single metric that balances correctness and completeness.
+	      \begin{equation}
+		      F_1(d) = 2 \cdot \frac{\text{Precision}(d) \cdot \text{Recall}(d)}{\text{Precision}(d) + \text{Recall}(d)}
+	      \end{equation}
+\end{itemize}
