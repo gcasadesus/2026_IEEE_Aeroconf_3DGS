@@ -1,33 +1,36 @@
 \section{Results}
-In this section, we conduct experiments to benchmark semantic segmentation models and analyze their impact on 3D reconstruction quality. We quantitatively evaluate segmentation performance and qualitatively investigate how semantic information improves surface reconstruction accuracy and rock detection.
+\label{sec:results}
+This section evaluates the key components of our mapping pipeline, beginning with the perception front-end. We first present a quantitative benchmark of various dense depth estimation and semantic segmentation models to assess their performance in the synthetic lunar environment. Subsequently, we analyze the final 3D reconstruction quality, evaluating how the selected perception models impact the geometric accuracy and semantic fidelity of the map. Both quantitative metrics and qualitative results are provided to support the analysis.
+The experiments were performed on a system equipped with an Intel i9-14900K CPU (32 cores, 5.7\,GHz), 128\,GB RAM, and an NVIDIA GeForce RTX 4090 GPU with 24\,GB VRAM.
+All results related to computational requirements (such as memory usage and runtime) are only indicative, as the current implementation, methods, and models have not been optimized.
 
 \begin{figure*}[b!]
 	\centering
 	\begin{subfigure}[b]{0.16\textwidth}
 		\includegraphics[width=\textwidth]{figures/rgb.png}
-		\caption{\bfseries RGB input.}
+		\caption{\bfseries Input}
 	\end{subfigure}\hfill
 	\begin{subfigure}[b]{0.16\textwidth}
 		\includegraphics[width=\textwidth]{figures/depth_error_BM.png}
-		\caption{\bfseries BM.}
+		\caption{\bfseries BM}
 	\end{subfigure}\hfill
 	\begin{subfigure}[b]{0.16\textwidth}
 		\includegraphics[width=\textwidth]{figures/depth_error_SGBM.png}
-		\caption{\bfseries SGBM.}
+		\caption{\bfseries SGBM}
 	\end{subfigure}\hfill
 	\begin{subfigure}[b]{0.16\textwidth}
 		\includegraphics[width=\textwidth]{figures/depth_error_RAFTStereo.png}
-		\caption{\bfseries RAFT-Stereo.}
+		\caption{\bfseries RAFT-Stereo}
 	\end{subfigure}\hfill
 	\begin{subfigure}[b]{0.16\textwidth}
 		\includegraphics[width=\textwidth]{figures/depth_error_Depth Anything V2 (small).png}
-		\caption{\bfseries Depth Anything.}
+		\caption{\bfseries Depth Anything}
 	\end{subfigure}\hfill
 	\begin{subfigure}[b]{0.16\textwidth}
 		\includegraphics[width=\textwidth]{figures/depth_error_DPT.png}
-		\caption{\bfseries DPT.}
+		\caption{\bfseries DPT}
 	\end{subfigure}
-	\caption{\bfseries Input image and depth estimation errors for a sample of the LuSNAR dataset~\cite{liu_lusnarlunar_2024} . The errors are in logarithmic scale to qualitatively characterize the performance of the models.}
+	\caption{\bfseries Input image and depth estimation errors for a sample of the LuSNAR dataset~\cite{liu_lusnarlunar_2024}. The other image used for stereo methods is not shown. The errors are in logarithmic scale to qualitatively characterize the performance of the models.}
 	\label{fig:depth_errors}
 \end{figure*}
 
