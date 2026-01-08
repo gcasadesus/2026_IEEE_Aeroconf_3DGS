@@ -2,10 +2,15 @@
 \label{sec:datasets_and_models}
 This section details the datasets and models that form the basis of our mapping framework. We first introduce the simulated lunar dataset used for evaluation. Following this, we provide a comprehensive overview of various methods for two key perception tasks: dense depth estimation—-from both monocular and stereo inputs—-and semantic segmentation. The primary objective is to benchmark these models to characterize their performance within a lunar context and determine their suitability for the downstream task of real-time 3D reconstruction. Finally, we describe the fundamentals of 3D Gaussian Splatting, the scene representation used in our mapping pipeline.
 
-\subsection{Dataset}
-% \item \textbf{LuSNAR Dataset}~\cite{liu_lusnarlunar_2024}. 
-We use the Lunar Segmentation, Navigation, and Reconstruction (LuSNAR) dataset, a comprehensive lunar benchmark dataset designed for evaluating autonomous perception and navigation systems~\cite{liu_lusnarlunar_2024}. It contains high-resolution stereo image pairs, semantic labels, dense depth maps, LiDAR point clouds, and rover position data. The dataset consists of 9 simulated lunar scenes created using Unreal Engine, each varying in terrain features and object density. These scenes are designed to represent different lunar surface conditions, from flat plains to cratered regions with varying rock distributions. The dataset enables the evaluation of key perception tasks, including semantic segmentation, 3D reconstruction, and autonomous navigation, making it a valuable resource for testing and validating lunar surface algorithms. However, it has some limitations: it does not provide full 3D geometry information, lacks closed-loop simulation capabilities, and has limited control over illumination conditions.
-We are currently working on extending this study to include other datasets.
+\subsection{Datasets}
+The datasets are generated with LuPNT~\cite{vila_lupnt_2025}, an open-source simulator for astrodynamics, communication, and Positioning, Navigation, and Timing (PNT). The simulator is written in C++ and has Python bindings. The lunar surface module uses Unreal Engine to generate stereo images, semantic labels, dense depth maps, and LiDAR point clouds. Terrain is based on lunar south pole Digital Elevation Models (DEMs) with procedural rocks and craters. The simulator supports multi-agent models and allows setting the Sun position and light sources.
+
+We use two datasets for training and evaluation:
+
+\begin{itemize}
+	\item \textbf{Training set:} Contains 14,400 stereo image pairs with depth and semantic labels. Data were collected along spiral paths around rovers, landers, and astronauts. The set includes variations in camera height, Sun position, and lighting.
+	\item \textbf{Evaluation set:} Contains 4,300 stereo image pairs from rover trajectories around a lander. These data include camera effects, low Sun elevation, and rover lights to test the models in conditions different from the training set.
+\end{itemize}
 
 % \begin{itemize}
 % \item \textbf{Open3D Environment}.
