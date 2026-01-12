@@ -3,21 +3,21 @@
 This subsection defines the evaluation metrics used to assess the performance of the proposed framework.
 
 \subsubsection{Depth Estimation}
-All depth estimation metrics are computed only over the valid pixels defined by the surface mask, $M_{\text{full}}$. For a rendered depth map $\hat{D}$ and a ground truth depth map $D$:
+Given an image $I$ and its predicted depth map $\hat{D}$ and a ground truth depth map $D$, we compute the following metrics:
 \begin{itemize}
 	\item \textbf{Mean Absolute Error (MAE) [m] $\downarrow$}: The average L1 distance between the rendered and ground truth depth.
 	      \begin{equation}
-		      \text{MAE} = \frac{1}{|M_{\text{full}}|} \sum_{p \in M_{\text{full}}} |\hat{D}(p) - D(p)|
+		      \text{MAE} = \frac{1}{|I|} \sum_{p \in I} |\hat{D}(p) - D(p)|
 	      \end{equation}
 
 	\item \textbf{Absolute Relative Error (AbsRel) $\downarrow$}: The scale-invariant average of the absolute relative difference.
 	      \begin{equation}
-		      \text{AbsRel} = \frac{1}{|M_{\text{full}}|} \sum_{p \in M_{\text{full}}} \frac{|\hat{D}(p) - D(p)|}{D(p)}
+		      \text{AbsRel} = \frac{1}{|I|} \sum_{p \in I} \frac{|\hat{D}(p) - D(p)|}{D(p)}
 	      \end{equation}
 
 	\item \textbf{Threshold Accuracy ($\delta_{25\%}$) $\uparrow$}: The percentage of pixels where the ratio between the rendered and ground truth depth is within a factor of 25\%.
 	      \begin{equation}
-		      \delta_{25\%} = \frac{1}{|M_{\text{full}}|} \sum_{p \in M_{\text{full}}} \mathbbm{1}\left\{\max\left(\frac{\hat{D}(p)}{D(p)}, \frac{D(p)}{\hat{D}(p)}\right) < 1.25\right\}
+		      \delta_{25\%} = \frac{1}{|I|} \sum_{p \in I} \mathbbm{1}\left\{\max\left(\frac{\hat{D}(p)}{D(p)}, \frac{D(p)}{\hat{D}(p)}\right) < 1.25\right\}
 	      \end{equation}
 
 	\item \textbf{Frames Per Second (FPS) $\uparrow$}: The processing throughput of the depth estimation model.
@@ -26,7 +26,7 @@ All depth estimation metrics are computed only over the valid pixels defined by 
 \subsubsection{Semantic Segmentation}
 We compute the following metrics over all the pixels in the image for the semantic segmentation models:
 \begin{itemize}
-	\item \textbf{Intersection over Union (mIoU) $\uparrow$}: The overlap between the predicted and ground truth masks for a single class or label.
+	\item \textbf{Intersection over Union (mIoU) $\uparrow$}: The overlap between the predicted and ground truth pixel masks for a single class or label.
 	      \begin{equation}
 		      \text{IoU} = \frac{\text{TP}}{\text{TP} + \text{FP} + \text{FN}}
 	      \end{equation}

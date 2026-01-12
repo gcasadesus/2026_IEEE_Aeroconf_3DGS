@@ -1,16 +1,17 @@
 \subsection{Depth Estimation}
-This section evaluates the depth estimation models on the LuSNAR dataset, combining qualitative analysis with quantitative metrics. \Cref{fig:depth_errors} provides a visual comparison of model outputs, while \Cref{tab:depth_models} lists the numerical results.
+This section evaluates the depth estimation models on the spirals LuPNT dataset, combining qualitative analysis with quantitative metrics. \Cref{fig:depth_errors} provides a visual comparison of model outputs, while \Cref{tab:depth_models} lists the numerical results computed for depths up to 20\,m to characterize close-range performance.
 
-Traditional stereo methods, such as Block Matching (BM) and Semi-Global Matching (SGBM), produce sparse depth estimates, struggling in regions with challenging illumination or low texture, as shown qualitatively in \Cref{fig:depth_errors}. The quantitative results in \Cref{tab:depth_models} reflect this; while their Mean Absolute Error (MAE) is low, this is a consequence of providing depth only in high-confidence areas, as indicated by their low $\delta_{25\%}$.
+Traditional stereo methods, such as Block Matching (BM) and Semi-Global Matching (SGBM), produce depth estimates that have gaps, which are especially notorious when rocks cast long sharp shadows, as they struggle in regions with challenging illumination or low texture, as shown qualitatively in \Cref{fig:depth_errors}. However, they offer high FPS and could also be used in this pipeline. The quantitative results in \Cref{tab:depth_models} reflect this; while their Mean Absolute Error (MAE) is low, this is a consequence of providing depth only in high-confidence areas, as indicated by their low $\delta_{25\%}$.
 
-In contrast, learning-based stereo models like RAFT-Stereo and CREStereo demonstrate superior performance, generating dense depth maps with high completion rates and accuracy (\Cref{fig:depth_errors}). While their MAE is higher than traditional methods due to denser predictions at long ranges, their low Absolute Relative Error (AbsRel) and significantly higher $\delta_{25\%}$ in \Cref{tab:depth_models} confirm better overall geometric coverage. Although CREStereo achieves slightly higher accuracy, its processing speed is substantially lower, as reported in \Cref{tab:depth_models}. Consequently, we select RAFT-Stereo for our mapping pipeline as it provides the best trade-off between strong accuracy and a frame rate more suitable for real-time operation.
+In contrast, learning-based stereo models like RAFT-Stereo and CREStereo demonstrate superior performance, generating dense depth maps with high completion rates and accuracy. While their MAE can be slightly higher than traditional methods due to denser predictions at long ranges, their low Absolute Relative Error (AbsRel) and significantly higher $\delta_{25\%}$ in \Cref{tab:depth_models} confirm better overall geometric coverage. Notably, RAFT-Stereo achieves better accuracy and higher processing speeds compared to CREStereo, as reported in \Cref{tab:depth_models}. Consequently, we select RAFT-Stereo for our mapping pipeline as it provides the best trade-off between strong accuracy and a frame rate more suitable for real-time operation.
 
 Monocular depth estimation models underperform across all metrics in \Cref{tab:depth_models}, even after being scaled with sparse feature matches. Their performance is likely constrained by the domain shift from the terrestrial datasets they were trained on. Despite their lower accuracy, they remain a potentially valuable source of geometric information when stereo data is unavailable.
+It is worth noting that learning-based models were evaluated using weights pretrained on terrestrial datasets. Fine-tuning on domain-specific lunar data would likely mitigate domain shift and improve performance.
 
 \begin{table}[t]
 	\centering
 	\small
-	\caption{\bfseries Comparison of depth estimation models. Monocular depth is scaled using sparse depth estimates from matched features.}
+	\caption{\bfseries Comparison of depth estimation models. Monocular depth is scaled using sparse depth estimates from matched features. Metrics computed for a depth of up to 20\,m.}
 	\label{tab:depth_models}
 	\begin{tabular}{|lrrrrr|}
 		\hline
@@ -38,3 +39,11 @@ Monocular depth estimation models underperform across all metrics in \Cref{tab:d
 		\hline
 	\end{tabular}
 \end{table}
+
+
+\begin{figure*}[t!]
+	\centering
+	\includegraphics[width=\linewidth]{models/depth_error.pdf}
+	\caption{\bfseries Input image and depth estimation errors for a sample of the LuPNT datasets~\cite{vila_lupnt_2025}. The other image used for stereo methods is not shown. The depth and depth errors are in logarithmic scale.}
+	\label{fig:depth_errors}
+\end{figure*}

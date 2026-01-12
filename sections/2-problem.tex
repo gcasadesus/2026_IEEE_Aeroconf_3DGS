@@ -1,16 +1,20 @@
 \section{Datasets and Models}
 \label{sec:datasets_and_models}
-This section details the datasets and models that form the basis of our mapping framework. We first introduce the simulated lunar dataset used for evaluation. Following this, we provide a comprehensive overview of various methods for two key perception tasks: dense depth estimation—-from both monocular and stereo inputs—-and semantic segmentation. The primary objective is to benchmark these models to characterize their performance within a lunar context and determine their suitability for the downstream task of real-time 3D reconstruction. Finally, we describe the fundamentals of 3D Gaussian Splatting, the scene representation used in our mapping pipeline.
+This section details the datasets and models that are used in our mapping framework. We first introduce the synthetic lunar datasets generated with LuPNT~\cite{vila_lupnt_2025}, an open-source simulator for astrodynamics, communication, and Positioning, Navigation, and Timing (PNT). Then, we provide a comprehensive overview of various methods for two key perception tasks: dense depth estimation—from both monocular and stereo inputs—and semantic segmentation. The primary objective is to benchmark these models to characterize their performance within a lunar context and determine their suitability for the downstream task of real-time 3D reconstruction. Finally, we describe the fundamentals of 3D Gaussian Splatting, the scene representation used in our mapping pipeline.
 
 \subsection{Datasets}
-The datasets are generated with LuPNT~\cite{vila_lupnt_2025}, an open-source simulator for astrodynamics, communication, and Positioning, Navigation, and Timing (PNT). The simulator is written in C++ and has Python bindings. The lunar surface module uses Unreal Engine to generate stereo images, semantic labels, dense depth maps, and LiDAR point clouds. Terrain is based on lunar south pole Digital Elevation Models (DEMs) with procedural rocks and craters. The simulator supports multi-agent models and allows setting the Sun position and light sources.
-
-We use two datasets for training and evaluation:
-
+\begin{figure}[b!]
+	\centering
+	\includegraphics[width=\linewidth, trim=0 1em 0 1em, clip]{seg_2d/unreal/seg_2d.pdf}
+	\caption{\bfseries Spirals dataset samples.}
+	\label{fig:dataset}
+\end{figure}
+Existing datasets~\cite{liu_lusnarlunar_2024} typically provide static data sequences that do not allow controlling lighting conditions and camera effects. To address this, the datasets used in this work are generated with LuPNT~\cite{vila_lupnt_2025}. The simulator is written in C++ with Python bindings, and uses Unreal Engine to simulate the lunar environment and generate stereo images, semantic labels, dense depth maps, and LiDAR point clouds from camera poses or rover trajectories. The simulated terrain is based on lunar south pole Digital Elevation Models (DEMs) with procedurally generated rocks and craters. The simulator supports multiple agents and allows configuring the Sun position, camera effects, and additional light sources, as well as closed-loop rover control. We use two different datasets:
 \begin{itemize}
-	\item \textbf{Training set:} Contains 14,400 stereo image pairs with depth and semantic labels. Data were collected along spiral paths around rovers, landers, and astronauts. The set includes variations in camera height, Sun position, and lighting.
-	\item \textbf{Evaluation set:} Contains 4,300 stereo image pairs from rover trajectories around a lander. These data include camera effects, low Sun elevation, and rover lights to test the models in conditions different from the training set.
+	\item \textbf{Spirals Dataset:} contains 14,400 stereo image pairs with depth and semantic labels. The images were collected along spiral paths around rovers, landers, and astronauts. This dataset includes variations in camera height, Sun position, and lighting conditions, as shown in \cref{fig:dataset}. It is split into training, evaluation, and test sets.
+	\item \textbf{Trajectories Dataset:} contains rover trajectories around a lander, each with 4,300 stereo image pairs captured at 10 Hz. It includes trajectories with different camera effects, low Sun elevation, and rover lights.
 \end{itemize}
+
 
 % \begin{itemize}
 % \item \textbf{Open3D Environment}.
@@ -28,7 +32,7 @@ We evaluate the following stereo depth estimation models:
 
 	\item \textbf{Semi-Global Matching (SGM)}~\cite{hirschmuller_stereo_2008}: Aggregates matching costs along multiple 1D paths across the image to approximate a 2D global smoothness constraint. This approach combines the efficiency of local methods with improved performance in low-texture areas.
 
-	\item \textbf{RAFT-Stereo}~\cite{lipson_raft-stereo_2021}: Adapts the RAFT architecture from optical flow by constructing a 3D correlation volume of all disparities at all pixels. A recurrent, GRU-based unit then iteratively updates a high-resolution disparity field from this volume.
+	\item \textbf{RAFT-Stereo}~\cite{lipson_raft-stereo_2021}: Shown in \cref{fig:raft_stereo}, it adapts the RAFT architecture from optical flow by constructing a 3D correlation volume of all disparities at all pixels. A recurrent, GRU-based unit then iteratively updates a high-resolution disparity field from this volume.
 
 	\item \textbf{CREStereo}~\cite{li_practical_2022}: A cascaded recurrent network that operates in a coarse-to-fine manner. It uses recurrent refinement units at each stage and an adaptive group correlation layer to handle large displacements between stereo images.
 \end{itemize}
@@ -50,7 +54,7 @@ We evaluate the following monocular dense depth estimation models:
 
 	\item \textbf{DPT}~\cite{ranftl_vision_2021}: Uses a Vision Transformer (ViT) as its backbone for dense prediction tasks. It processes feature maps at a constant resolution, providing global receptive fields at every stage of the network.
 
-	\item \textbf{Depth Pro}~\cite{bochkovskii_depth_2025}: A model for zero-shot metric depth estimation that uses a multi-scale vision transformer and is designed to operate on high-resolution inputs (e.g., 1536x1536).
+	\item \textbf{Depth Pro}~\cite{bochkovskii_depth_2025}: A model for zero-shot metric depth estimation that uses a multi-scale vision transformer and is designed to operate on high-resolution inputs.
 \end{itemize}
 
 
@@ -62,7 +66,7 @@ We evaluate the following semantic segmentation models:
 
 	\item \textbf{U-Net++}~\cite{zhou_unet_2018}: Modifies the U-Net skip pathways with nested and dense convolutional blocks to reduce the semantic gap between encoder and decoder features.
 
-	\item \textbf{MA-Net}~\cite{fan_ma-net_2020}: Augments an encoder-decoder network with a module that combines position-wise and channel-wise attention to capture contextual dependencies.
+	\item \textbf{MANet}~\cite{fan_ma-net_2020}: Augments an encoder-decoder network with a module that combines position-wise and channel-wise attention to capture contextual dependencies.
 
 	\item \textbf{LinkNet}~\cite{chaurasia_linknet_2017}: A lightweight encoder-decoder network for real-time applications that passes encoder features at each level directly to the corresponding decoder level.
 
@@ -85,7 +89,6 @@ We evaluate the following semantic segmentation models:
 
 \subsection{3D Gaussian Splatting}
 3D Gaussian Splatting (3DGS)~\cite{kerbl_3d_2023} is a rasterization-based method for novel view synthesis that represents a 3D scene with a collection of explicit, optimizable primitives. Unlike implicit representations like NeRF~\cite{mildenhall_nerf_2021}, 3DGS uses thousands to millions of 3D Gaussians to explicitly model the scene's geometry and appearance, as illustrated in \cref{fig:gaussian_splatting}.
-
 Each Gaussian is defined by a set of learnable parameters:
 \begin{itemize}
 	\item \textbf{Mean:} $\boldsymbol{\mu} \in \mathbb{R}^3$ determines its location in 3D space.
@@ -102,7 +105,7 @@ Each Gaussian is defined by a set of learnable parameters:
 To synthesize outputs from a novel viewpoint, the 3D Gaussians are projected onto the 2D image plane, forming elliptical splats. These splats are sorted by depth and composited in a front-to-back order using alpha blending. This differentiable rendering process produces not only the final RGB image ($\hat{I}$), but also a depth map and an accumulation (opacity) map. The rendered image can be directly compared to a ground truth image for gradient-based optimization, while the depth and accumulation maps provide additional supervision or regularization signals as needed.
 
 \subsubsection{Adaptive Densification Strategy}
-A key component of the 3DGS training process is the strategy for adaptive densification, which dynamically adjusts the set of Gaussians to efficiently represent the scene. This process is governed by periodic checks that add or remove primitives based on three main heuristics: the magnitude of the positional image-plane gradient, the 3D scale, and the opacity of each Gaussian. The strategy consists of three primary operations: growing, pruning, and opacity reset.
+A key component of the 3DGS training process is the strategy for adaptive densification, which dynamically adjusts the set of Gaussians to efficiently represent the scene~\cite{kerbl_3d_2023}. This process is governed by periodic checks that add or remove primitives based on three main heuristics: the magnitude of the positional image-plane gradient, the 3D scale, and the opacity of each Gaussian. The strategy consists of three primary operations: growing, pruning, and opacity reset.
 
 \begin{itemize}
 	\item \textbf{Growing (Densification)}:
@@ -139,7 +142,7 @@ To prevent the Gaussians from becoming overly stretched, a scale regularization 
 
 The final loss is the sum of these two components, with a weighting factor $\lambda_{\text{scale}}$ for the regularization term:
 \begin{equation}
-	\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{recon}} + \lambda_{\text{scale}}\mathcal{L}_{\text{scale}}
+	\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{recon}} + \lambda_{\text{scale}}\mathcal{L}_{\text{scale}}.
 \end{equation}
 
 \begin{figure}[t]

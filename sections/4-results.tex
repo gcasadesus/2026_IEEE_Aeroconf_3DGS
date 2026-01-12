@@ -2,14 +2,7 @@
 \label{sec:results}
 This section evaluates the key components of our mapping pipeline, beginning with the perception front-end. We first present a quantitative benchmark of various dense depth estimation and semantic segmentation models to assess their performance in the synthetic lunar environment. Subsequently, we analyze the final 3D reconstruction quality, evaluating how the selected perception models impact the geometric accuracy and semantic fidelity of the map. Both quantitative metrics and qualitative results are provided to support the analysis.
 The experiments were performed on a system equipped with an AMD Ryzen 9 9950X CPU (16 cores, 5.7\,GHz), 128\,GB RAM, and an NVIDIA GeForce RTX 5090 GPU with 32\,GB VRAM.
-All results related to computational requirements (such as memory usage and runtime) are only indicative, as the current implementation, methods, and models have not been optimized.
-
-\begin{figure*}[b!]
-	\centering
-	\includegraphics[width=\linewidth]{models/depth_error.pdf}
-	\caption{\bfseries Input image and depth estimation errors for a sample of the LuSNAR dataset~\cite{liu_lusnarlunar_2024}. The other image used for stereo methods is not shown. The errors are in logarithmic scale to qualitatively characterize the performance of the models.}
-	\label{fig:depth_errors}
-\end{figure*}
+All results related to computational requirements (such as memory usage and runtime) are only indicative, as the current implementation, methods, and models could be optimized further.
 
 \input{sections/4-1-metrics.tex}
 \input{sections/4-2-depth.tex}

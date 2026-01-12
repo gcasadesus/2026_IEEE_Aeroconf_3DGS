@@ -6,11 +6,18 @@ The paper evaluates different methods to perform depth estimation, terrain segme
 
 - As stated by the authors, computational resources on Mars missions are limited and the mention of areas and concrete ideas on how to reduce resource requirements is appreciated. Please mention this limitation/future work in the conclusion, too, as otherwise one could get a wrong impression from Abstract and Conclusion. 
 
+DONE: Mentioned computational resources limitations in the conclusion and future work.
+
 - Dynamic lighting conditions on the Moon were not evaluated. The 3D reconstruction exploits perfectly accurate poses and images without noise, lens flares, or similar. While this is acknowledged by the authors, these are unrealistic assumptions and the value of the results is unclear. For a fairer assessment, noise could be added to the camera poses and, less importantly, consider adding image artifacts/dynamic light. 
+
+DONE: Semantic segmentation models are trained under dynamic lighting conditions. 
+TODO: Mapping with lower lighting conditions.
 
 - From the reviewer's point of view, the paper could be accepted since the main contribution of the paper is a preliminary evaluation of these methods, with potential extension to be used in a real environment. 
 
 - Please clarify how the segmentation is used for the final map. The individual segmentation shows various classes, but it appears that only the sky class is relevant for the 3D reconstruction. The shown examples of the final map do not (visibly) feature segmentations.
+
+DONE: Explained segmentation loss and added segmentation render
 
 ## Reviewer 2
 
@@ -20,7 +27,11 @@ This contribution presents a well-motivated study addressing the challenges of r
 
 - The claim of real-time performance is not fully supported. While execution speeds for individual perception components are estimated, the paper does not provide end-to-end runtime measurements of the proposed pipeline. In its current configuration, the system operates in a low-frequency online processing (< 1 Hz) rather than in real-time. 
 
+DONE: Clarified real-time meaning in planetary context (Intro) and added end-to-end runtime estimate with bottleneck explanation (Results). 
+
 - On the other hand, the definition of real-time is application-dependent. Therefore, a more precise explanation of the chosen performance criteria would be beneficial. 
+
+DONE: Defined real-time criteria (0.1-10 Hz) in Introduction. 
 
 - Due to its broad scope, the paper is also dense on first reading. This is particularly reflected in section 4, in which the evaluation results are presented, analyzed, concluded, and further incorporated into future work at once. Splitting the contributions into separate sections or restructuring the results section into distinct results, discussion, and future work components may be clearer. 
 
@@ -32,4 +43,8 @@ This work presents a method for creating dense, semantic 3D maps of the lunar su
 
 - Runtime performance is reported for a terrestrial desktop setup; however, discussing expected performance on current or next generation flight hardware would be valuable, as would an assessment of the feasibility for real time, onboard deployment. 
 
+DONE: Added discussion on transition to flight hardware and necessary optimizations in Conclusion. 
+
 - While direct comparisons with alternative Gaussian Splatting variants (e.g., 2DGS) are not required, a brief discussion of these alternatives and their anticipated performance would further strengthen the work. Overall, the paper is well formatted and very well written.
+
+DONE: Added comparison with NeRF, 2DGS, and Neural Point Clouds as future work in the conclusion.
